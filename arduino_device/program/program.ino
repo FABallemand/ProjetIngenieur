@@ -15,6 +15,8 @@ an Arduino Nano in order to collect road data.
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
     #include "Wire.h"
 #endif
+#include <SPI.h>
+#include <SD.h>
 
 // MPU ===============================================
 /*====================================================
@@ -81,6 +83,19 @@ void dmpDataReady() {
 // is present in this case). Could be quite handy in some cases.
 //#define OUTPUT_READABLE_WORLDACCEL
 
+// Button =============================================
+const int buttonPin = 3;
+int buttonState = 0;
+int previousButtonState = 0;
+
+// SD Card ============================================
+File dataFile;
+#define MOSI 11
+#define MISO 12
+#define CLK 13
+#define CS 10
+int recordingState = 0; // 0 => not using the SD card
+
 // Initial Set-up ====================================
 
 void setup() {
@@ -96,6 +111,9 @@ void setup() {
     // Serial ========================================
     Serial.begin(9600);
     // Serial.begin(115200);
+    while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB port only
+    }
 
     // MPU ===========================================
     // Initialize device
@@ -107,10 +125,10 @@ void setup() {
     Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
 
     // Wait for ready (BUTTON IN THE FUTURE) =========
-    Serial.println(F("\nSend any character to begin DMP programming and demo: "));
+    /*Serial.println(F("\nSend any character to begin DMP programming and demo: "));
     while (Serial.available() && Serial.read()); // empty buffer
     while (!Serial.available());                 // wait for data
-    while (Serial.available() && Serial.read()); // empty buffer again
+    while (Serial.available() && Serial.read()); // empty buffer again*/
 
     // DMP (Digital Motion Processor) from IMU =======
     // Load DMP
@@ -152,6 +170,18 @@ void setup() {
     }
     // configure LED for output
     pinMode(LED_PIN, OUTPUT);
+
+    // Button ========================================
+    pinMode(buttonPin, INPUT);
+
+    // SD Card =======================================
+    // Initialisation
+    Serial.print("Initializing SD card...");
+    if (!SD.begin(CS)) {
+      Serial.println("initialization failed!");
+      while (1);
+    }
+    Serial.println("initialization done.");
 }
 
 // Main Program ======================================
@@ -159,7 +189,10 @@ void setup() {
 void loop() {
     // If initialisation failed... ===================
     if (!dmpReady) return;
-    
+
+    String dataString = "";
+
+    // IMU ===========================================
     // Read the latest packet from FIFO
     if (mpu.dmpGetCurrentFIFOPacket(fifoBuffer)) {
         #ifdef OUTPUT_READABLE_QUATERNION
@@ -194,10 +227,16 @@ void loop() {
             mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
             Serial.print("ypr\t");
             Serial.print(ypr[0] * 180/M_PI);
+            dataString += String(ypr[0] * 180/M_PI);
+            dataString += ";";
             Serial.print("\t");
             Serial.print(ypr[1] * 180/M_PI);
+            dataString += String(ypr[1] * 180/M_PI);
+            dataString += ";";
             Serial.print("\t");
             Serial.println(ypr[2] * 180/M_PI);
+            dataString += String(ypr[2] * 180/M_PI);
+            
         #endif
 
         #ifdef OUTPUT_READABLE_REALACCEL
@@ -233,5 +272,26 @@ void loop() {
         // Blink LED to indicate activity
         blinkState = !blinkState;
         digitalWrite(LED_PIN, blinkState);
+
+        // Button ========================================
+        buttonState = digitalRead(buttonPin);
+        if (buttonState != previousButtonState) {
+          if (buttonState == LOW) { // The button went from on to off (released)
+            recordingState = (recordingState == 0); // Change recordingState
+          }
+        }
+        
+        // SD Card =======================================
+        if (recordingState != 0) {
+          dataFile = SD.open("data.txt", FILE_WRITE);
+          if(dataFile) {
+            dataFile.println(dataString);
+            dataFile.close(); // Test -> open/close file only when button is pushed
+            Serial.println(dataString); // For testing purpose only
+          }
+          else{
+            Serial.println("Error: unable to open data.txt");
+          }
+        }
     }
 }
