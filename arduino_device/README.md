@@ -23,4 +23,5 @@ On it has been build, the program located in the **program** folder has to be fl
 - DroneBot Workshop: [Build an Electronic Level with MPU-6050 and Arduino](https://www.youtube.com/watch?v=XCyRXMvVSCw&ab_channel=DroneBotWorkshop)
 - DroneBot Workshop: [Using SD Cards with Arduino - Record Servo Motor Movements](https://www.youtube.com/watch?v=kwk3qzaIcCU&ab_channel=DroneBotWorkshop)
 - DroneBot Workshop: [GPS Modules with Arduino and Raspberry Pi](https://www.youtube.com/watch?v=PQhQfww-qGQ&ab_channel=DroneBotWorkshop)
+- DroneBot Workshop: [Arduino Real Time Clock - Using the Tiny RTC](https://www.youtube.com/watch?v=lyvoOEO-Ncg&ab_channel=DroneBotWorkshop)
 - Arduino: [State Change Detection (Edge Detection) for pushbuttons](https://docs.arduino.cc/built-in-examples/digital/StateChangeDetection)
