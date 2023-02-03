@@ -5,5 +5,5 @@
 ## Equipe
 
 - ALLEMAND Fabien
-- B... Sylvain
+- BALAKRISHNAN Sylvain
 - BONNAIL Julie
