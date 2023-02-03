@@ -63,18 +63,10 @@ bool getDate(const char *str)
   return true;
 }
 
-/*String convert2string(int number) {
-  String res = "";
-  if (number >= 0 && number < 10) {
-    res += "0";
-  }
-  res += String(number);
-}*/
-
 // GPS ================================================
-#define swsTX 4
-#define swsRX 5
-SoftwareSerial GPS(swsRX, swsTX);
+#define swsTX 5
+#define swsRX 4
+SoftwareSerial GPS(swsTX, swsRX);
 //Adafruit_HMC5883_Unified mag = Adafruit_HMC5883_Unified(12345);
 
 /*void displaySensorDetails(void)
@@ -134,15 +126,12 @@ void dmpDataReady() {
 //#define OUTPUT_READABLE_WORLDACCEL // Acceleration components with gravity removed and adjusted for the world frame of reference (yaw is relative to initial orientation, since no magnetometer is present in this case)
 
 // Button =============================================
-const int buttonPin = 3;
+const int buttonPin = 2; // Maybe 2 is not compatible with IMU
 int buttonState = 0;
 int previousButtonState = 0;
 
 // SD Card ============================================
 File dataFile;
-#define MOSI 11
-#define MISO 12
-#define CLK 13
 #define CS 10
 int recordingState = 0; // 0 => not using the SD card
 
