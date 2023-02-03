@@ -56,7 +56,7 @@ SoftwareSerial GPS(swsRX, swsTX);
   ====================================================*/
 
 MPU6050 mpu; // Default adresses: AD0 low = 0x68, AD0 high = 0x69
-#define INTERRUPT_PIN 2
+#define INTERRUPT_PIN 3
 #define LED_PIN 13
 bool blinkState = false;
 // MPU control/status vars
@@ -87,7 +87,7 @@ void dmpDataReady() {
 //#define OUTPUT_READABLE_WORLDACCEL // Acceleration components with gravity removed and adjusted for the world frame of reference (yaw is relative to initial orientation, since no magnetometer is present in this case)
 
 // Button =============================================
-const int buttonPin = 3;
+const int buttonPin = 2;
 int buttonState = 0;
 int previousButtonState = 0;
 
