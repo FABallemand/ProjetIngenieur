@@ -1,5 +1,5 @@
 // Button =============================================
-const int buttonPin = 2;
+const int buttonPin = 8;
 int buttonState = 0;
 int previousButtonState = 0;
 int changeOnButtonRelease = 0;

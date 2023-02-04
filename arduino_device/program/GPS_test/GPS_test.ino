@@ -1,31 +1,14 @@
-/*#define swsTX 4
-  #define swsRX 5
-
-  #include <SoftwareSerial.h>
-  SoftwareSerial GPS(swsRX, swsTX);
-
-  void setup() {
-  Serial.begin(115200);
-  Serial.println("Initialised serial monitor");
-  GPS.begin(9600);
-  Serial.println("Initialised GPS module");
-  }
-
-
-  void loop() {
-  while (GPS.available() > 0) {
-    Serial.write(GPS.read());
-  }
-  }
-*/
-
-//=====================================================//
+#include <SoftwareSerial.h>
 
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_HMC5883_U.h>
 
-/* Assign a unique ID to this sensor at the same time */
+// GPS ================================================
+#define swsTX 5
+#define swsRX 4
+SoftwareSerial GPS(swsTX, swsRX);
+
 Adafruit_HMC5883_Unified mag = Adafruit_HMC5883_Unified(12345);
 
 void displaySensorDetails(void)
@@ -44,30 +27,40 @@ void displaySensorDetails(void)
   delay(500);
 }
 
-void setup(void)
-{
+void setup() {
+  // Serial ========================================
   Serial.begin(9600);
-  Serial.println("HMC5883 Magnetometer Test"); Serial.println("");
-
-  /* Initialise the sensor */
-  if (!mag.begin())
-  {
-    /* There was a problem detecting the HMC5883 ... check your connections */
-    Serial.println("Ooops, no HMC5883 detected ... Check your wiring!");
-    while (1);
+  // Serial.begin(115200);
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB port only
   }
 
-  /* Display some basic information on this sensor */
-  displaySensorDetails();
+  // GPS ===========================================
+  // GPS
+  GPS.begin(9600);
+  // Magnetometer
+  if (!mag.begin())
+  {
+    Serial.println("ERROR: magnetometer");
+    while (1);
+  }
+  // displaySensorDetails();
+
+  Serial.println("Ready to test GPS!");
 }
 
-void loop(void)
-{
-  /* Get a new sensor event */
+
+void loop() {
+  // GPS ===========================================
+  while (GPS.available() > 0) {
+    Serial.write(GPS.read());
+  }
+
+  // Get a new sensor event
   sensors_event_t event;
   mag.getEvent(&event);
 
-  /* Display the results (magnetic vector values are in micro-Tesla (uT)) */
+  // Display the results (magnetic vector values are in micro-Tesla (uT))
   Serial.print("X: "); Serial.print(event.magnetic.x); Serial.print("  ");
   Serial.print("Y: "); Serial.print(event.magnetic.y); Serial.print("  ");
   Serial.print("Z: "); Serial.print(event.magnetic.z); Serial.print("  "); Serial.println("uT");
