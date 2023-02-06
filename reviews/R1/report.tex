@@ -120,23 +120,39 @@
 \end{figure}
 
 \newpage
-\vspace*{0.01cm}
+\renewcommand{\contentsname}{Table des matières}
 \tableofcontents
 
 \newpage
-\vspace*{0.01cm}
+\addcontentsline{toc}{section}{Liste des figures}
+\renewcommand{\listfigurename}{Liste des figures}
 \listoffigures
 
 \newpage
 \vspace*{0.01cm}
+
 \input{src/intro.tex}
 
-\newpage
-\vspace*{0.01cm}
+\input{src/project.tex}
+
+\input{src/state_art.tex}
+
+\input{src/objectives.tex}
+
+\input{src/perimeter.tex}
+
+\input{src/risks.tex}
+
+\input{src/ressources.tex}
+
+\input{src/planning.tex}
+
 \input{src/conclusion.tex}
 
 \newpage
-% \addcontentsline{toc}{section}{Bibliography}
+\vspace*{0.01cm}
+\addcontentsline{toc}{section}{Bibliographie}
+\renewcommand{\refname}{Bibliographie}
 \bibliographystyle{plain}
 \bibliography{bibliography.bib}
 
