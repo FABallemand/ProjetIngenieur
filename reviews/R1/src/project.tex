@@ -5,12 +5,23 @@ informatique pour améliorer les conditions de conduites face aux routes mal
 entretenues.
 
 \subsection{Enjeux}
+En 2017, près de 75\% des actifs français utlisent la voiture pour des déplacements quotidiens notamment pour se rendre sur leur lieu de travail \cite{insee}. Ce sont donc 18,1 millions d'usagers qui parcourent le réseau routier français régulièrement. Selon des études plus récentes, la proportion de travailleurs utilisant leur voiture pour effectuer les trajets domicile-travail a augmenté sous l'effet de la crise sanitaire liée à la Covid-19 \cite{covid}, les français ne se sentant plus en sécurité dans les transports en commun.
+De nos jours encore, les véhicules routiers représentent plus de 80\% des déplacements des français pour se rendre en vacances \cite{vacances}.
+Selon l'Insee, il y a 37,9 millions de véhicules actuellement en service en France.
+Assurer la sécurité et le confort de l'ensemble des usagers lors de leurs déplacements personnels ou professionnels est donc une priorité. Or 30\% des accidents de la route mortels sont causés par des déformations sur la chaussée \cite{europe1}. Ce chiffre pourrait augmenter avec l'arrivée des véhicules autonomes sur les routes. Ces derniers pourraient être déstabilisés par certains défauts sur les routes.
+Néanmoins, selon le dernier rapport de l'ONR le budget consacré à l'entretien des routes ne cesse de diminuer \cite{onr} alors que la qualité du réseau routier se dégrade \cite{tf1}.\\
 
--Sécurité (Dégradation rapide)
--Confort (Dégradation rapide)
--Cout
--Pollution
--Compétitivité
+Outre le confort et la sécurité, les défauts sur les chaussées impactent aussi les frais d'entretiens des véhicules. Selon une étude menée aux Etats Unis d'Amérique, les réparations enegendrées par le mauvais état des routes représentent plusieurs centaines d'euros par voiture par an.\\
+
+D'autres études dénoncent aussi un coût environnemental. Les dégâts et les réparations sur les véhicules ne sont pas sans impact sur la nature \cite{pneus} et les conditions des routes peuvent drastiquement modifier le comportement du véhicule ce qui peut induire une plus forte emission de gaz à effet de serre.
+
+Finalement, l'état et la qualité du réseau routier ont une influence sur la compétitivité économique et militaire d'un pays : un pays ayant un réseau routier médiocre ne pourra pas faire transiter des marchandises suffisamment rapidement et sera donc moins compétitif \cite{economique}. 
+
+% -Sécurité (Dégradation rapide)
+% -Confort (Dégradation rapide)
+% -Cout
+% -Pollution
+% -Compétitivité
 
 \subsection{Mise en oeuvre}
 Etant donné l'étendue des réseaux routiers et leur rapide évolution, mobiliser
@@ -21,6 +32,19 @@ solution viable en terme de coût financier et environnemental. De plus, cette
 méthode ne fournirait pas nécessairement de bons résultats puisque certaines
 dégradations pourraient ne pas être vues ou tout simplement négligées par les
 ouvriers.\\
+
+Le but est donc de créer un système informatique capable d'analyser en continu
+l'état de la
+route et de transmettre en temps réel les éventuels dégâts repérés.\\
+
+Un traitement par image est envisageable cependant les images satellites
+n'offrent pas suffisamment de précision pour repérer des dégradation à
+l'échelle d'une route et il n'est pas envisageable de placer des caméras pour
+surveiller l'état de l'ensemble d'un réseau routier. Une caméra embarquée a
+l'avantage de balayer une grande surface d'un réseau rapidement et de façon
+régulière. Cependant, la qualité de l'image lors du déplacement du véhicule
+dans des conditions d'éclairage variables n'est probablement pas suffisante
+pour détecter les dégradations les plus fines.
 
 \begin{figure}[H]
     \centering
