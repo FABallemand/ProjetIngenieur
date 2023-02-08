@@ -1,1 +1,12 @@
 \section{Risques}
+Il existe de nombreux risques pouvant impacter le développement et par la suite le bon fonctionnement du système basé sur l'application. Le but de cette section et d'appréhender ces risques et de proposer des solutions afin de les éviter ou de les corriger si besoin.\\
+
+Dans un premier temps, de nombreux facteurs peuvent impacter la qualité des données recueillies.\\
+Il faut que le système soit capable de détecter si les données correspondent bien à un enregistrement effectué dans un véhicule. De même l'utilisaton du smartphone par un passager fausserait les données. Les données collectées par l'utilisateur par inadvertence doivent être ignorées par un système de détection d'outliers.\\
+La position du téléphone lors de l'enregistrement doit être prise en compte. L'application doit être capable de connaitre l'orientation du téléphone pour en extraire les données d'accélération verticale. (Cela évite une contrainte supplémentaire pour l'utilisateur qui devrait dans le cas contraire fixer son téléphone dans une position précise et prédéfinie).\\
+La position du smartphone dans le véhicule risque d'impacter les données accélérométriques : moins de fortes secousses à proximité des essieux. L'intelligence artificielle pourrait être entrainée sur des données récoltées à différentes position dans le véhicule afin de contrer ce biais.\\
+Finalement, un instrulment mal calibré peut fournir des données erronées. Il faut donc effectuer régulièrement des phases de calibration de l'appareil.\\
+
+L'intelligence artificielle entrainée ne sera sûrment pas infaillible mais il faudra faire en sorte de limiter les cas de faux positifs (objets égarés sur la routes ou dégradation temporaries dues à des travaux) et les faux négatifs (obstacles marginaux, dégradation en bord de route ou en dehors du passage des roues).\\
+
+Finalement, le système peut souffrir d'une mauvaise adaptabilité. Nous souhaitons dans un premier temps travailler avec un robot téléguidé dont la strucure est différente d'un vrai véhicule. De plus chaque véhicule possède une géométrie et un système d'amortisseurs différents donc la réaction de chaque véhicule face aux dégradations est unique.\\

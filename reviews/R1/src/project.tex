@@ -5,7 +5,8 @@ informatique pour améliorer les conditions de conduites face aux routes mal
 entretenues.
 
 \subsection{Enjeux}
-En 2017, près de 75\% des actifs français utlisent la voiture pour des
+En 2017, près de 75\% des actifs français utlisent une voiture pour effectuer
+leurs
 déplacements quotidiens notamment pour se rendre sur leur lieu de travail
 \cite{insee}. Ce sont donc 18,1 millions d'usagers qui parcourent le réseau
 routier français régulièrement. Selon des études plus récentes, la proportion
@@ -13,8 +14,8 @@ de travailleurs utilisant leur voiture pour effectuer les trajets
 domicile-travail a augmenté sous l'effet de la crise sanitaire liée à la
 Covid-19 \cite{covid}, les français ne se sentant plus en sécurité dans les
 transports en commun.
-De nos jours encore, les véhicules routiers représentent plus de 80\% des
-déplacements des français pour se rendre en vacances \cite{vacances}.
+De nos jours, les véhicules routiers représentent plus de 80\% des
+déplacements des français lors des vacances \cite{vacances}.
 Selon l'Insee, il y a 37,9 millions de véhicules actuellement en service en
 France.
 Assurer la sécurité et le confort de l'ensemble des usagers lors de leurs
@@ -29,7 +30,7 @@ routier se dégrade \cite{tf1}.\\
 
 Outre le confort et la sécurité, les défauts sur les chaussées impactent aussi
 les frais d'entretiens des véhicules. Selon une étude menée aux Etats Unis
-d'Amérique, les réparations enegendrées par le mauvais état des routes
+d'Amérique, les réparations engendrées par le mauvais état des routes
 représentent plusieurs centaines d'euros par voiture par an.\\
 
 D'autres études dénoncent aussi un coût environnemental. Les dégâts et les
@@ -67,7 +68,7 @@ La collecte de donnée sous forme participative s'annonce comme l'unique
 alternative aux équipes de techniciens balayant le réseau routier car les
 images satellites
 n'offrent pas suffisamment de précision pour repérer des dégradation à
-l'échelle d'une route et il n'est pas envisageable de placer des caméras pour
+l'échelle d'une route et il n'est pas envisageable de placer des capteurs pour
 surveiller l'état de l'ensemble d'un réseau routier. Collecter dans une base de
 donnée communautaire des informations sur les routes permet de recouvrir
 le réseau selon les dimensions spaciales et temporelle.\\
@@ -79,7 +80,8 @@ négligeable. La collecte de données se fait au travers d'une
 application développée à cet effet. Le choix du smartphone plutôt qu'un
 appareil spécialisé permet aussi de limiter l'impact environnemental du
 projet.\\
-Cette même application sera utilisée par les ouvriers voiries pour prendre connaissance de l'état courant de la route.\\
+Cette même application sera utilisée par les ouvriers voiries pour prendre
+connaissance de l'état courant de la route (Figure \ref{syst_1}).\\
 
 \begin{figure}[H]
     \centering
@@ -96,7 +98,7 @@ Cette même application sera utilisée par les ouvriers voiries pour prendre con
         \draw[-] (app) -- (entretien)
     \end{tikzpicture}
     \caption{Description du fonctionnement du système}
-    \label{analyse}
+    \label{syst_1}
 \end{figure}
 
 Un traitement par image est envisageable. Une caméra embarquée a
@@ -109,18 +111,24 @@ positionnement de la caméra, espace de
 stockage, consomation énergétique...\\
 
 En revanche la collecte de données accélérométriques peut être réalisée à
-moindre coup. Il est possible d'utiliser l'accéléromètre contenu dans un smartphone sans imposer trop de
+moindre coup. Il est possible d'utiliser l'accéléromètre contenu dans un
+smartphone sans imposer trop de
 contraintes à un utilisateur. Par ailleurs, l'espace mémoire pour enregistrer
 les données est significativement plus faible. Les données recueillies
 contenant notamment l'accélération verticale permettront de repérer des défauts
 sur la chaussée. Il est important de remarquer que seules les dégradations sur
 lesquelles l'utilisateur roulera seront détectées.\\
 
-Le traitement des données collectées pourrait se faire localement grâce à la puissance de calcul des processeurs portables. Cependant, envoyer les données à un serveur qui prend en charge l'analyse libère le smartphone de l'utilisateur de cette tâche.\\
+Le traitement des données collectées pourrait se faire localement grâce à la
+puissance de calcul des processeurs portables. Cependant, envoyer les données à
+un serveur qui prend en charge l'analyse libère le smartphone de l'utilisateur
+de cette tâche.\\
 
 Afin d'améliorer les conditions de conduites, toute dégradation de la chaussée
-doit être signalée au plus vite au personnel chargé de l'entretien. Suite à l'analyse, le
-personnel peut être prévenu grâce à une notification provenant de l'application pour smartphone.\\
+doit être signalée au plus vite au personnel chargé de l'entretien. Suite à
+l'analyse, le
+personnel peut être prévenu grâce à une notification provenant de l'application
+pour smartphone comme décrit sur la Figure \ref{syst_2}.\\
 
 % La détection de défauts sur les infrastructures routières peut être réalisée
 % grâce à une analyse de données recueillies sur les chaussées. Sachant que
@@ -147,10 +155,15 @@ personnel peut être prévenu grâce à une notification provenant de l'applicat
         \draw[-] (app) -- (serveur);
     \end{tikzpicture}
     \caption{Description du fonctionnement du système (Analyse)}
-    \label{analyse}
+    \label{syst_2}
 \end{figure}
 
-Le traitement des données sur le serveur repose sur un système d'intelligence artificelle permettant de classer les signaux accélérométriques reçus. Etant donné que le modèle est uniquement sur le serveur, il peut facilement être amélioré avec de nouvelles données d'entrainement. Pour cela, un ouvrier peut confirmer une dégradation signalée par l'application. Cela permet d'obtenir de nouvelles données labellées.\\
+Le traitement des données sur le serveur repose sur un système d'intelligence
+artificelle permettant de classer les signaux accélérométriques reçus. Etant
+donné que le modèle est uniquement sur le serveur, il peut facilement être
+amélioré avec de nouvelles données d'entrainement. Pour cela, un ouvrier peut
+confirmer une dégradation signalée par l'application (Figure \ref{syst_3}). Cela permet d'obtenir de
+nouvelles données labellées.\\
 
 \begin{figure}[H]
     \centering
@@ -170,5 +183,5 @@ Le traitement des données sur le serveur repose sur un système d'intelligence 
         \draw[-] (app) -- (serveur);
     \end{tikzpicture}
     \caption{Description du fonctionnement du système (Collecte)}
-    \label{collecte}
+    \label{syst_3}
 \end{figure}
