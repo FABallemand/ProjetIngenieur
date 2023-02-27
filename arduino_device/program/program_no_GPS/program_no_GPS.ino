@@ -2,49 +2,56 @@
 // Ingineering Project | TPS x Alcatel Lucent | 2023 |
 //====================================================
 
-
 /*====================================================
-  This files contains the code that should be flash in
-  an Arduino Nano in order to collect road data.
+  This files contains the code that should be flashed
+  on an Arduino Nano in order to collect road data.
   ====================================================*/
 
-// Libraries =========================================
-
-#include "I2Cdev.h"
-#include "MPU6050_6Axis_MotionApps20.h"
-#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-#include "Wire.h"
-#endif
-
-#include <SoftwareSerial.h>
+// RTC ===============================================
 #include <Wire.h>
-#include <Adafruit_Sensor.h>
-#include <Adafruit_HMC5883_U.h>
+#include <TimeLib.h>
+#include <DS1307RTC.h>
 
-#include <SPI.h>
-#include <SD.h>
+tmElements_t tm;
+const char *monthName[12] = {
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+};
 
-// GPS ================================================
-#define swsTX 4
-#define swsRX 5
-SoftwareSerial GPS(swsRX, swsTX);
-//Adafruit_HMC5883_Unified mag = Adafruit_HMC5883_Unified(12345);
+bool getTime(const char *str)
+{
+  int Hour, Min, Sec;
 
-/*void displaySensorDetails(void)
-  {
-  sensor_t sensor;
-  mag.getSensor(&sensor);
-  Serial.println("------------------------------------");
-  Serial.print  ("Sensor:       "); Serial.println(sensor.name);
-  Serial.print  ("Driver Ver:   "); Serial.println(sensor.version);
-  Serial.print  ("Unique ID:    "); Serial.println(sensor.sensor_id);
-  Serial.print  ("Max Value:    "); Serial.print(sensor.max_value); Serial.println(" uT");
-  Serial.print  ("Min Value:    "); Serial.print(sensor.min_value); Serial.println(" uT");
-  Serial.print  ("Resolution:   "); Serial.print(sensor.resolution); Serial.println(" uT");
-  Serial.println("------------------------------------");
-  Serial.println("");
-  delay(500);
-  }*/
+  if (sscanf(str, "%d:%d:%d", &Hour, &Min, &Sec) != 3) return false;
+  tm.Hour = Hour;
+  tm.Minute = Min;
+  tm.Second = Sec;
+  return true;
+}
+
+bool getDate(const char *str)
+{
+  char Month[12];
+  int Day, Year;
+  uint8_t monthIndex;
+
+  if (sscanf(str, "%s %d %d", Month, &Day, &Year) != 3) return false;
+  for (monthIndex = 0; monthIndex < 12; monthIndex++) {
+    if (strcmp(Month, monthName[monthIndex]) == 0) break;
+  }
+  if (monthIndex >= 12) return false;
+  tm.Day = Day;
+  tm.Month = monthIndex + 1;
+  tm.Year = CalendarYrToTm(Year);
+  return true;
+}
+
+void print2digits(int number) {
+  if (number >= 0 && number < 10) {
+    Serial.write('0');
+  }
+  Serial.print(number);
+}
 
 // IMU ===============================================
 /*====================================================
@@ -54,11 +61,14 @@ SoftwareSerial GPS(swsRX, swsTX);
   #0 pin.
   On the Arduino Nano, this is digital I/O pin 2.
   ====================================================*/
+#include "I2Cdev.h"
+#include "MPU6050_6Axis_MotionApps20.h"
+#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
+#include "Wire.h"
+#endif
 
-MPU6050 mpu; // Default adresses: AD0 low = 0x68, AD0 high = 0x69
-#define INTERRUPT_PIN 3
-#define LED_PIN 13
-bool blinkState = false;
+MPU6050 mpu(0x68); // Default adresses: AD0 low = 0x68, AD0 high = 0x69
+#define INTERRUPT_PIN 2
 // MPU control/status vars
 bool dmpReady = false;  // set true if DMP init was successful
 uint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU
@@ -87,15 +97,15 @@ void dmpDataReady() {
 //#define OUTPUT_READABLE_WORLDACCEL // Acceleration components with gravity removed and adjusted for the world frame of reference (yaw is relative to initial orientation, since no magnetometer is present in this case)
 
 // Button =============================================
-const int buttonPin = 2;
+#define BUTTON_PIN 8
 int buttonState = 0;
 int previousButtonState = 0;
 
 // SD Card ============================================
+#include <SPI.h>
+#include <SD.h>
+
 File dataFile;
-#define MOSI 11
-#define MISO 12
-#define CLK 13
 #define CS 10
 int recordingState = 0; // 0 => not using the SD card
 
@@ -115,21 +125,32 @@ void setup() {
 
   // Serial ========================================
   Serial.begin(9600);
-  // Serial.begin(115200);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
+  Serial.println("# Begin setup");
 
-  // GPS ===========================================
-  // GPS
-  GPS.begin(9600);
-  // Magnetometer
-  /*if (!mag.begin())
-  {
-    Serial.println("ERROR: magnetometer");
-    while (1);
+  // RTC ===========================================
+  bool parse = false;
+  bool config = false;
+  // Get the date and time
+  if (getDate(__DATE__) && getTime(__TIME__)) {
+    parse = true;
+    // Configure RTC
+    if (RTC.write(tm)) {
+      config = true;
+    }
   }
-  // displaySensorDetails();*/
+  if (!(parse && config)) {
+    Serial.println("ERROR: RTC");
+  }
+
+  if (parse && config) {
+    Serial.print("DS1307 configured Time=");
+    Serial.print(__TIME__);
+    Serial.print(", Date=");
+    Serial.println(__DATE__);
+  }
 
   // IMU ===========================================
   // Initialize device
@@ -138,12 +159,6 @@ void setup() {
   if (!mpu.testConnection()) {
     Serial.println("ERROR: IMU");
   }
-
-  // Wait for ready (BUTTON IN THE FUTURE) =========
-  /*Serial.println(F("\nSend any character to begin DMP programming and demo: "));
-    while (Serial.available() && Serial.read()); // empty buffer
-    while (!Serial.available());                 // wait for data
-    while (Serial.available() && Serial.read()); // empty buffer again*/
 
   // DMP (Digital Motion Processor) from IMU =======
   // Load DMP
@@ -156,7 +171,7 @@ void setup() {
   // Working test (0 => OK)
   if (devStatus == 0) {
     // Calibration Time: generate offsets and calibrate our MPU6050
-    mpu.CalibrateAccel(6);
+    mpu.CalibrateAccel(6); // ???
     mpu.CalibrateGyro(6);
     mpu.PrintActiveOffsets();
     // Turn on the DMP
@@ -180,20 +195,17 @@ void setup() {
     Serial.print(devStatus);
     Serial.println(")");
   }
-  // configure LED for output
-  pinMode(LED_PIN, OUTPUT);
 
   // Button ========================================
-  pinMode(buttonPin, INPUT);
+  pinMode(BUTTON_PIN, INPUT);
 
   // SD Card =======================================
-  /*if (!SD.begin(CS)) {
-    Serial.println(F("ERROR: SD Card initialization failed");
+  if (!SD.begin(CS)) {
+    Serial.println("ERROR: SD");
     while (1);
-    }
-    Serial.println(F("SD Card connexion successful"));*/
+  }
 
-  Serial.println("= OK =");
+  Serial.println("# OK");
 }
 
 //====================================================
@@ -206,32 +218,32 @@ void loop() {
 
   String dataString = "";
 
-  // GPS ===========================================
-  if (GPS.available() > 0) {
-    //dataString.write(GPS.read());
-    //dataString += String(GPS.read());
-    dataString += "GPS_DATA;";
+  // RTC ===========================================
+  if (RTC.read(tm)) {
+    dataString += tmYearToCalendar(tm.Year);
+    dataString += "/";
+    dataString += String(tm.Month);
+    dataString += "/";
+    dataString += String(tm.Day);
+    dataString += ";";
+    dataString += String(tm.Hour);
+    dataString += ":";
+    dataString += String(tm.Minute);
+    dataString += ":";
+    dataString += String(tm.Second);
+    dataString += ";";
+
+    Serial.print("Time=");
+    Serial.print(__TIME__);
+    Serial.print(", Date=");
+    Serial.println(__DATE__);
+  } else {
+    if (RTC.chipPresent()) {
+      Serial.println("ERROR: RTC stopped");
+    } else {
+      Serial.println("ERROR: RTC disconnected");
+    }
   }
-  // Get a new sensor event
-  /*sensors_event_t event;
-  mag.getEvent(&event);*/
-
-  // Display the results (magnetic vector values are in micro-Tesla (uT))
-  /*Serial.print("X: "); Serial.print(event.magnetic.x); Serial.print("  ");
-    Serial.print("Y: "); Serial.print(event.magnetic.y); Serial.print("  ");
-    Serial.print("Z: "); Serial.print(event.magnetic.z); Serial.print("  "); Serial.println("uT");*/
-
-  // Compute heading angle (taking into account the declination angle)
-  /*float heading = atan2(event.magnetic.y, event.magnetic.x);
-  float declinationAngle = (2.5333 * M_PI) / 180;
-  heading += declinationAngle;
-  if (heading < 0)
-    heading += 2 * PI;
-  if (heading > 2 * PI)
-    heading -= 2 * PI;
-  float headingDegrees = heading * 180 / M_PI;
-  dataString += String(headingDegrees);
-  dataString += ";";*/
 
   // IMU ===========================================
   // Read the latest packet from FIFO
@@ -309,15 +321,12 @@ void loop() {
     Serial.print("\t");
     Serial.println(aaWorld.z);
 #endif
-
-    // Blink LED to indicate activity
-    blinkState = !blinkState;
-    digitalWrite(LED_PIN, blinkState);
   }
 
   // Button ========================================
-  buttonState = digitalRead(buttonPin);
+  buttonState = digitalRead(BUTTON_PIN);
   if (buttonState != previousButtonState) {
+    previousButtonState = buttonState; // Update button state
     if (buttonState == LOW) { // The button went from on to off (released)
       recordingState = (recordingState == 0); // Change recordingState
       Serial.println("BUTTON RELEASED");
@@ -326,15 +335,17 @@ void loop() {
 
   // SD Card =======================================
   Serial.println(dataString);
-  /*if (recordingState != 0) {
+  if (recordingState != 0) {
     dataFile = SD.open("data.txt", FILE_WRITE);
     if (dataFile) {
       dataFile.println(dataString);
       dataFile.close(); // Test -> open/close file only when button is pushed
-      Serial.println(dataString); // For testing purpose only
+      Serial.println("WRITTING: " + dataString); // For testing purpose only
     }
     else {
-      Serial.println("Error: unable to open data.txt");
+      Serial.println("Error: data.txt");
     }
-    }*/
+  }
+
+  delay(2000); // Testing purpose only
 }

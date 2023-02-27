@@ -13,7 +13,7 @@
   On the Arduino Nano, this is digital I/O pin 2.
   ====================================================*/
 
-MPU6050 mpu; // Default adresses: AD0 low = 0x68, AD0 high = 0x69
+MPU6050 mpu(0x68); // Default adresses: AD0 low = 0x68, AD0 high = 0x69
 #define INTERRUPT_PIN 2
 #define LED_PIN 13
 bool blinkState = false;
@@ -65,7 +65,7 @@ void setup() {
   mpu.initialize();
   pinMode(INTERRUPT_PIN, INPUT);
   if (!mpu.testConnection()) {
-    Serial.println("ERROR: IMU");
+    Serial.println("ERROR: IMU"); // PROBLEME D4ADRESSES
   }
 
   // DMP (Digital Motion Processor) from IMU =======
@@ -112,7 +112,12 @@ void setup() {
 
 void loop() {
   // If initialisation failed... ===================
-  if (!dmpReady) return;
+  if (!dmpReady) {
+    Serial.println("Initialisation failed");
+    return;
+  }
+
+  Serial.println("Begin loop");
 
   // IMU ===========================================
   // Read the latest packet from FIFO
@@ -143,6 +148,7 @@ void loop() {
 #endif
 
 #ifdef OUTPUT_READABLE_YAWPITCHROLL
+    Serial.println("YPR");
     // Display Euler angles in degrees
     mpu.dmpGetQuaternion(&q, fifoBuffer);
     mpu.dmpGetGravity(&gravity, &q);
@@ -154,6 +160,18 @@ void loop() {
     Serial.print("\t");
     Serial.println(ypr[2] * 180 / M_PI);
 #endif
+
+    Serial.println("YPR");
+    // Display Euler angles in degrees
+    mpu.dmpGetQuaternion(&q, fifoBuffer);
+    mpu.dmpGetGravity(&gravity, &q);
+    mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+    Serial.print("ypr\t");
+    Serial.print(ypr[0] * 180 / M_PI);
+    Serial.print("\t");
+    Serial.print(ypr[1] * 180 / M_PI);
+    Serial.print("\t");
+    Serial.println(ypr[2] * 180 / M_PI);
 
 #ifdef OUTPUT_READABLE_REALACCEL
     // Display real acceleration, adjusted to remove gravity
@@ -189,4 +207,8 @@ void loop() {
     blinkState = !blinkState;
     digitalWrite(LED_PIN, blinkState);
   }
+
+  Serial.println("End loop");
+  
+  delay(1000);
 }

@@ -67,51 +67,56 @@ void setup() {
     Serial.println("ERROR: RTC");
   }
 
-  /*if (parse && config) {
+  if (parse && config) {
     Serial.print("DS1307 configured Time=");
     Serial.print(__TIME__);
     Serial.print(", Date=");
     Serial.println(__DATE__);
-    } else if (parse) {
+  } else if (parse) {
     Serial.println("DS1307 Communication Error :-{");
     Serial.println("Please check your circuitry");
-    } else {
+  } else {
     Serial.print("Could not parse info from the compiler, Time=\"");
     Serial.print(__TIME__);
     Serial.print("\", Date=\"");
     Serial.print(__DATE__);
     Serial.println("\"");
-    }*/
+  }
 
   Serial.println("Ready to test RTC!");
 }
 
 void loop() {
   // RTC ===========================================
-  String dataString = "";
-  if (RTC.read(tm)) {
+  /*String dataString = "";
+    if (RTC.read(tm)) {
     dataString += tmYearToCalendar(tm.Year);
-    dataString += "/";
-    dataString += String(tm.Month);
-    dataString += "/";
-    dataString += String(tm.Day);
-    dataString += ";";
-    dataString += String(tm.Hour);
-    dataString += ":";
-    dataString += String(tm.Minute);
-    dataString += ":";
-    dataString += String(tm.Second);
-    dataString += ";";
-  } else {
+      dataString += "/";
+      dataString += String(tm.Month);
+      dataString += "/";
+      dataString += String(tm.Day);
+      dataString += ";";
+      dataString += String(tm.Hour);
+      dataString += ":";
+      dataString += String(tm.Minute);
+      dataString += ":";
+      dataString += String(tm.Second);
+      dataString += ";";
+    Serial.println(tm.Month);
+    Serial.println(tm.Day);
+    Serial.println(tm.Hour);
+    Serial.println(tm.Minute);
+    Serial.println(tm.Second);
+    } else {
     if (RTC.chipPresent()) {
       Serial.println(F("ERROR: RTC stopped"));
     } else {
       Serial.println(F("ERROR: RTC disconnected"));
     }
-  }
-  Serial.println(dataString);
+    }
+    Serial.println(dataString);*/
 
-  /*if (RTC.read(tm)) {
+  if (RTC.read(tm)) {
     Serial.print("Ok, Time = ");
     print2digits(tm.Hour);
     Serial.write(':');
@@ -125,7 +130,7 @@ void loop() {
     Serial.write('/');
     Serial.print(tmYearToCalendar(tm.Year));
     Serial.println();
-    } else {
+  } else {
     if (RTC.chipPresent()) {
       Serial.println("The DS1307 is stopped.  Please run the SetTime");
       Serial.println("example to initialize the time and begin running.");
@@ -135,6 +140,6 @@ void loop() {
       Serial.println();
     }
     delay(9000);
-    }*/
+  }
   delay(1000);
 }
