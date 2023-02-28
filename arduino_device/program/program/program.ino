@@ -16,7 +16,7 @@
 #define swsTX 5
 #define swsRX 4
 SoftwareSerial GPS(swsTX, swsRX);
-// Adafruit_HMC5883_Unified mag = Adafruit_HMC5883_Unified(12345);
+//Adafruit_HMC5883_Unified mag = Adafruit_HMC5883_Unified(12345);
 
 /*void displaySensorDetails(void)
   {
@@ -81,7 +81,7 @@ void dmpDataReady()
 #define OUTPUT_READABLE_WORLDACCEL // Acceleration components with gravity removed and adjusted for the world frame of reference (yaw is relative to initial orientation, since no magnetometer is present in this case)
 
 // Button ============================================
-const int buttonPin = 8;
+#define BUTTON_PIN 8
 int buttonState = 0;
 int previousButtonState = 0;
 
@@ -111,7 +111,6 @@ void setup()
 
   // Serial ==========================================
   Serial.begin(9600);
-  // Serial.begin(115200);
   while (!Serial)
   {
     ; // wait for serial port to connect. Needed for native USB port only
@@ -126,8 +125,8 @@ void setup()
     {
     Serial.println("ERROR: magnetometer");
     while (1);
-    }
-    // displaySensorDetails();*/
+    }*/
+  // displaySensorDetails();
 
   // IMU =============================================
   // Initialize device
@@ -152,7 +151,7 @@ void setup()
   if (devStatus == 0)
   {
     // Calibration Time: generate offsets and calibrate our MPU6050
-    // mpu.CalibrateAccel(6); // ???
+    mpu.CalibrateAccel(6); // ???
     mpu.CalibrateGyro(6);
     mpu.PrintActiveOffsets();
     // Turn on the DMP
@@ -181,7 +180,7 @@ void setup()
   pinMode(LED_PIN, OUTPUT);
 
   // Button ==========================================
-  pinMode(buttonPin, INPUT);
+  pinMode(BUTTON_PIN, INPUT);
 
   // SD Card =========================================
   if (!SD.begin(CS)) {
@@ -205,14 +204,14 @@ void loop()
   String dataString = "";
 
   // GPS =============================================
-  /*while (GPS.available() > 0)
-    {
-    dataString += String(GPS.read());
-    }
-    dataString += ";";*/
+  while (GPS.available() > 0)
+  {
+    dataString += GPS.read();
+  }
+  dataString += ";";
   // Get a new sensor event
   /*sensors_event_t event;
-    mag.getEvent(&event);*/
+  mag.getEvent(&event);*/
 
   // Display the results (magnetic vector values are in micro-Tesla (uT))
   /*Serial.print("X: "); Serial.print(event.magnetic.x); Serial.print("  ");
@@ -221,15 +220,15 @@ void loop()
 
   // Compute heading angle (taking into account the declination angle)
   /*float heading = atan2(event.magnetic.y, event.magnetic.x);
-    float declinationAngle = (2.5333 * M_PI) / 180;
-    heading += declinationAngle;
-    if (heading < 0)
+  float declinationAngle = (2.5333 * PI) / 180;
+  heading += declinationAngle;
+  if (heading < 0)
     heading += 2 * PI;
-    if (heading > 2 * PI)
+  if (heading > 2 * PI)
     heading -= 2 * PI;
-    float headingDegrees = heading * 180 / M_PI;
-    dataString += String(headingDegrees);
-    dataString += ";";*/
+  float headingDegrees = heading * 180 / M_PI;
+  dataString += String(headingDegrees);
+  dataString += ";";*/
 
   // IMU =============================================
   // Read the latest packet from FIFO
@@ -320,7 +319,7 @@ void loop()
   }
 
   // Button ==========================================
-  buttonState = digitalRead(buttonPin);
+  buttonState = digitalRead(BUTTON_PIN);
   if (buttonState != previousButtonState)
   {
     previousButtonState = buttonState;
@@ -329,10 +328,10 @@ void loop()
       recordingState = (recordingState == 0); // Change recordingState
       if (recordingState)
       {
-        Serial.println("-> Start recording");
         ++fileNumber;
+        Serial.println("-> Start recording " + String(fileNumber));
       } else {
-        Serial.println("-> Stop recording");
+        Serial.println("-> Stop recording " + String(fileNumber));
       }
     }
   }
@@ -347,7 +346,7 @@ void loop()
       Serial.println(dataString); // For testing purpose only
     }
     else {
-      Serial.println("Error: unable to open data.txt");
+      Serial.println("Error: unable to open file");
     }
   }
 

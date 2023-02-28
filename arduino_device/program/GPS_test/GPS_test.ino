@@ -1,11 +1,11 @@
 /*#include <SoftwareSerial.h>
 
-// GPS ================================================
-#define swsTX 4
-#define swsRX 5
-SoftwareSerial GPS(swsTX, swsRX);
+  // GPS ================================================
+  #define swsTX 4
+  #define swsRX 5
+  SoftwareSerial GPS(swsTX, swsRX);
 
-void setup() {
+  void setup() {
   // Serial ========================================
   Serial.begin(9600);
   //Serial.begin(115200);
@@ -18,33 +18,33 @@ void setup() {
   GPS.begin(9600);
 
   Serial.println("Ready to test GPS!");
-}
+  }
 
 
-void loop() {
+  void loop() {
   // GPS ===========================================
   while (GPS.available() > 0) {
     Serial.write(GPS.read());
   }
   delay(500);
-}*/
+  }*/
 
 
 #include <SoftwareSerial.h>
 
-  #include <Wire.h>
-  #include <Adafruit_Sensor.h>
-  #include <Adafruit_HMC5883_U.h>
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_HMC5883_U.h>
 
-  // GPS ================================================
-  #define swsTX 5
-  #define swsRX 4
-  SoftwareSerial GPS(swsTX, swsRX);
+// GPS ================================================
+#define swsTX 5
+#define swsRX 4
+SoftwareSerial GPS(swsTX, swsRX);
 
-  Adafruit_HMC5883_Unified mag = Adafruit_HMC5883_Unified(12345);
+Adafruit_HMC5883_Unified mag = Adafruit_HMC5883_Unified(12345);
 
-  void displaySensorDetails(void)
-  {
+void displaySensorDetails(void)
+{
   sensor_t sensor;
   mag.getSensor(&sensor);
   Serial.println("------------------------------------");
@@ -57,9 +57,9 @@ void loop() {
   Serial.println("------------------------------------");
   Serial.println("");
   delay(500);
-  }
+}
 
-  void setup() {
+void setup() {
   // Serial ========================================
   Serial.begin(9600);
   // Serial.begin(115200);
@@ -79,10 +79,10 @@ void loop() {
   // displaySensorDetails();
 
   Serial.println("Ready to test GPS!");
-  }
+}
 
 
-  void loop() {
+void loop() {
   // GPS ===========================================
   while (GPS.available() > 0) {
     Serial.write(GPS.read());
@@ -122,4 +122,4 @@ void loop() {
   Serial.print("Heading (degrees): "); Serial.println(headingDegrees);
 
   delay(500);
-  }
+}
