@@ -1,6 +1,6 @@
 # DATA 2023/02/28
 
-Testing Arduino device (GPS board).
+Testing Arduino device (GPS board without GPS).
 
 - DATA1: no movement  
 - DATA2: shake along the X axis  

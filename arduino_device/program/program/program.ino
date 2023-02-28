@@ -7,6 +7,10 @@
   on an Arduino Nano in order to collect road data.
   ====================================================*/
 
+#define BREAD_BOARD
+// #define GPS_BOARD
+// #define NO_GPS_BOARD
+
 // GPS ===============================================
 #include <SoftwareSerial.h>
 #include <Wire.h>
@@ -141,12 +145,30 @@ void setup()
   // Load DMP
   devStatus = mpu.dmpInitialize();
   // Configure with your own gyro offsets here, scaled for min sensitivity
+#ifdef BREAD_BOARD
   mpu.setXAccelOffset(-2253);
   mpu.setYAccelOffset(-1387);
   mpu.setZAccelOffset(1552);
   mpu.setXGyroOffset(107);
   mpu.setYGyroOffset(-53);
   mpu.setZGyroOffset(-28);
+#endif
+#ifdef GPS_BOARD
+  mpu.setXAccelOffset(-1616);
+  mpu.setYAccelOffset(-500);
+  mpu.setZAccelOffset(923);
+  mpu.setXGyroOffset(37);
+  mpu.setYGyroOffset(-18);
+  mpu.setZGyroOffset(24);
+#endif
+#ifdef NO_GPS_BOARD // Not real values
+  mpu.setXAccelOffset(-2253);
+  mpu.setYAccelOffset(-1387);
+  mpu.setZAccelOffset(1552);
+  mpu.setXGyroOffset(107);
+  mpu.setYGyroOffset(-53);
+  mpu.setZGyroOffset(-28);
+#endif
   // Working test (0 => OK)
   if (devStatus == 0)
   {
@@ -211,7 +233,7 @@ void loop()
   dataString += ";";
   // Get a new sensor event
   /*sensors_event_t event;
-  mag.getEvent(&event);*/
+    mag.getEvent(&event);*/
 
   // Display the results (magnetic vector values are in micro-Tesla (uT))
   /*Serial.print("X: "); Serial.print(event.magnetic.x); Serial.print("  ");
@@ -220,15 +242,15 @@ void loop()
 
   // Compute heading angle (taking into account the declination angle)
   /*float heading = atan2(event.magnetic.y, event.magnetic.x);
-  float declinationAngle = (2.5333 * PI) / 180;
-  heading += declinationAngle;
-  if (heading < 0)
+    float declinationAngle = (2.5333 * PI) / 180;
+    heading += declinationAngle;
+    if (heading < 0)
     heading += 2 * PI;
-  if (heading > 2 * PI)
+    if (heading > 2 * PI)
     heading -= 2 * PI;
-  float headingDegrees = heading * 180 / M_PI;
-  dataString += String(headingDegrees);
-  dataString += ";";*/
+    float headingDegrees = heading * 180 / M_PI;
+    dataString += String(headingDegrees);
+    dataString += ";";*/
 
   // IMU =============================================
   // Read the latest packet from FIFO
