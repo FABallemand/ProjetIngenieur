@@ -18,7 +18,7 @@ All components are mounted on a custom PCB (design files located in **pcb** fold
 
 On it has been build, the program located in the **program** folder has to be flashed on the Arduino. The device will start/stop recording when the button is pressed.
 
-## Ressouces
+## References
 
 - DroneBot Workshop: [Build an Electronic Level with MPU-6050 and Arduino](https://www.youtube.com/watch?v=XCyRXMvVSCw&ab_channel=DroneBotWorkshop)  
 - fire-DIY: [Calibrer le capteur MPU6050 avec un Arduino](https://www.firediy.fr/article/calibrer-le-capteur-mpu6050-avec-un-arduino-drone-ch-5)  

@@ -8,3 +8,8 @@ Each folder contains a *.csv* and a *.FIT* file respectively containing accelera
 - Software: Physical Toolbox for Android  
 - Car: Citroen C1  
 - Sampling rate: (see files time stamps)  
+
+## References
+
+- Python-Fitparse: [Documentation](https://dtcooper.github.io/python-fitparse/)  
+- gpxpy: [Example](https://pypi.org/project/gpxpy/)  
