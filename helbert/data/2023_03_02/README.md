@@ -11,11 +11,19 @@ Each folder contains a *.csv* and a *.FIT* file respectively containing accelera
 
 ## References
 
+### GPS File Parsing
 - Python-Fitparse: [Documentation](https://dtcooper.github.io/python-fitparse/)  
-- gpxpy: [Example](https://pypi.org/project/gpxpy/)  
+
+### GPS Data Units
+- GPS Forum: [Explanation sought concerning gps semicircles](https://www.gps-forums.com/threads/explanation-sought-concerning-gps-semicircles.1072/)  
+- Garmin: [Semicircles](https://github.com/garmin/connectiq-apps/blob/master/barrels/Semicircles/README.md)
+
+### GPS Data Visualisation
+- PyPi : [gpxpy](https://pypi.org/project/gpxpy/)  
 - The Data Frog: [Show your Data in a Google Map with Python](https://thedatafrog.com/en/articles/show-data-google-map-python/)  
 - Python Data Science Handbook: [Geographic Data with Basemap](https://jakevdp.github.io/PythonDataScienceHandbook/04.13-geographic-data-with-basemap.html)  
 - Research.ganse.org: [Visualizing GPS tracking data in Python/Jupyter](http://research.ganse.org/datasci/gps/)  
+- PyPi: [gmplot](https://pypi.org/project/gmplot/)
+- Steven Van Drope: [gmplot in Jupyter: installation guide and package exploration](https://medium.com/@stevenvandorpe/gmplot-in-jupyter-installation-guide-and-package-exploration-338756e8f26)  
+- GeeksForGeeks: [Python | Plotting Google Map using gmplot package](https://www.geeksforgeeks.org/python-plotting-google-map-using-gmplot-package/)
 
-- GPS Forum: [Explanation sought concerning gps semicircles](https://www.gps-forums.com/threads/explanation-sought-concerning-gps-semicircles.1072/)  
-- Garmin: [Semicircles](https://github.com/garmin/connectiq-apps/blob/master/barrels/Semicircles/README.md)
