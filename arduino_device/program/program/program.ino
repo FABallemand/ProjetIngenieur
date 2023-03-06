@@ -7,8 +7,8 @@
   on an Arduino Nano in order to collect road data.
   ====================================================*/
 
-#define BREAD_BOARD
-// #define GPS_BOARD
+// #define BREAD_BOARD
+#define GPS_BOARD
 // #define NO_GPS_BOARD
 
 // GPS ===============================================
