@@ -7,3 +7,11 @@
 *.log
 *.out
 *.toc
+
+helbert/**/*.html
+helbert/**/*.png
+
+arduino_device/data/**/*.png
+
+android_app/data/**/*.html
+android_app/data/**/*.png
