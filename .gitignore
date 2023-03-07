@@ -8,10 +8,14 @@
 *.out
 *.toc
 
-helbert/**/*.html
+*.html
+
 helbert/**/*.png
+helbert/**/*.html
 
 arduino_device/data/**/*.png
+arduino_device/data/**/*.html
+# !arduino_device/**/metadata/*
 
-android_app/data/**/*.html
 android_app/data/**/*.png
+android_app/data/**/*.html
