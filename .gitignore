@@ -8,6 +8,8 @@
 *.out
 *.toc
 
+*.mp4
+
 *.html
 
 helbert/**/*.png

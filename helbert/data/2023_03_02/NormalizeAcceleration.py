@@ -6,7 +6,7 @@ from shutil import copyfile
 
 def getXYZinitialMeanValues(filename):
     meanValues = [0.0,0.0,0.0] # x, y ,z initial value
-    meanValuesForLargestWindow = [0.0, 0.0, 0.0] #mean value for larger windowSize
+    meanValuesForLargestWindow = [0.0, 0.0, 0.0] # mean value for larger windowSize
     accuracy = 0.01
     maxWindowSize = 0
 

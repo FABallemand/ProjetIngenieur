@@ -88,9 +88,9 @@
 }
 
 \fancyhead[L]{ALLEMAND Fabien\\BALAKRISHNAN Sylvain\\BONNAIL Julie}
-\fancyhead[C]{Mesurer les Infrastructures Routières}
+\fancyhead[C]{Road Quality Assessment}
 \fancyhead[R]{\includegraphics[scale=0.4]{../../common/logo_TPS_1.png}}
-\fancyfoot[L]{Projet Ingénieur}
+\fancyfoot[L]{Engineering Project}
 \fancyfoot[R]{\today}
 
 \begin{document}
@@ -100,13 +100,13 @@
 \begin{center}
     \baselineskip=50pt
     \vspace*{1cm}
-    \textbf{{\Huge Projet Ingénieur}}\\
+    \textbf{{\Huge Engineering Project}}\\
     \vspace*{0.25cm}
-    \textbf{{\Huge Mesurer les Infrastructures Routières}}\\
+    \textbf{{\Huge Road Quality Assessment}}\\
     \vspace*{0.25cm}
     \begin{minipage}[c]{.46\linewidth}
         \centering
-        \textbf{Equipe:}\\
+        \textbf{Team:}\\
         ALLEMAND Fabien\\BALAKRISHNAN Sylvain\\BONNAIL Julie
     \end{minipage}
 \end{center}
@@ -120,12 +120,11 @@
 \end{figure}
 
 \newpage
-\renewcommand{\contentsname}{Table des matières}
+\vspace*{0.01cm}
 \tableofcontents
 
 \newpage
-\addcontentsline{toc}{section}{Liste des figures}
-\renewcommand{\listfigurename}{Liste des figures}
+\vspace*{0.01cm}
 \listoffigures
 
 \newpage
@@ -135,25 +134,21 @@
 
 \input{src/project.tex}
 
+\input{src/r1.tex}
+
 \input{src/state_art.tex}
 
-\input{src/objectives.tex}
+\input{src/data_collection.tex}
 
-\input{src/perimeter.tex}
+\input{src/data_visualisation.tex}
 
-\input{src/risks.tex}
-
-\input{src/ressources.tex}
-
-\input{src/planning.tex}
+\input{src/smartphone_app.tex}
 
 \input{src/conclusion.tex}
 
 \newpage
 \vspace*{0.01cm}
-\addcontentsline{toc}{section}{Bibliographie}
-\renewcommand{\refname}{Bibliographie}
 \bibliographystyle{plain}
-\bibliography{bibliography.bib}
+\bibliography{../bibliography.bib}
 
 \end{document}
