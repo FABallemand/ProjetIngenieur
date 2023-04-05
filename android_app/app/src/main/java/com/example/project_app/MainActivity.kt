@@ -1,5 +1,6 @@
 package com.example.project_app
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -28,15 +30,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            /*TestTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Layout()
-                }
-            }*/
             TestTheme {
                 PIApp()
             }
@@ -72,16 +65,6 @@ fun ApplicationName() {
                 //.fillMaxHeight()
                 .wrapContentHeight(Alignment.Top)
         )
-        /*Text(
-            text = "by TPS x Alcatel-Lucent",
-            fontSize = 20.sp,
-            color = Color.White,
-            modifier = Modifier
-                .background(color = MaterialTheme.colors.spanColor)
-                .fillMaxWidth()
-                .wrapContentWidth(Alignment.End)
-                .padding(start = 16.dp, end = 16.dp)
-        )*/
     }
 }
 
@@ -125,7 +108,7 @@ fun EditTextField(
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
-
+    val context = LocalContext.current
     var result by remember { mutableStateOf(0) }
 
     Box {
@@ -143,13 +126,13 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             // Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = { result = 1 },
+                onClick = { context.startActivity(Intent(context, RecordingActivity::class.java)) },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = MaterialTheme.colors.spanColor,
                     contentColor = Color.White
                 )
             ) {
-                Text("Button 1")
+                Text(stringResource(R.string.recording_button))
             }
 
             Button(

@@ -1,4 +1,7 @@
 <resources>
-    <string name="app_name">Test</string>
+    <string name="app_name">Projet Ingénieur</string>
     <string name="pi_app_name">Detect Road Deterioration</string>
+    <string name="recording_button">Collect Data</string>
+    <string name="start_recording_button">Start Collecting Data</string>
+    <string name="stop_recording_button">End Collecting Data</string>
 </resources>
