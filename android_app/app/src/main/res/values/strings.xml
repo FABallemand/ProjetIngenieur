@@ -4,4 +4,5 @@
     <string name="recording_button">Collect Data</string>
     <string name="start_recording_button">Start Collecting Data</string>
     <string name="stop_recording_button">Stop Collecting Data</string>
+    <string name="cleaning_button">Delete All Data</string>
 </resources>

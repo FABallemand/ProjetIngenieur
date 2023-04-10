@@ -16,10 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.project_app.ui.theme.TestTheme
 import com.example.project_app.ui.theme.spanColor
 import java.io.File
@@ -54,10 +52,13 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
 
     private fun startListen() {
 
+        println("Start Collecting Data")
         accelerometerEventListener = AccelerometerHandler(this)
 
         if (accelerometerEventListener != null) {
             sensorManager.unregisterListener(accelerometerEventListener)
+        } else {
+            println("ERROR: No accelerometer detected")
         }
         sensorManager.registerListener(
             accelerometerEventListener,
@@ -67,6 +68,7 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
     }
 
     override fun onPause() {
+        println("Stop Collecting Data")
         super.onPause()
         sensorManager.unregisterListener(accelerometerEventListener)
     }
@@ -80,7 +82,7 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
 
     fun Double.format(digits: Int) = java.lang.String.format("%.${digits}f", this)
 
-    @Composable
+/*    @Composable
     fun SensorsDisplay() {
         val file = File(fileName)
         val fileExists = file.exists()
@@ -96,26 +98,11 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
         } else {
             print("No such file: $fileName")
         }
-    }
+    }*/
 
     private fun onButtonClicked() {
         if (!recordingState.value) {
             recording += 1
-
-            /*var isNewFileCreated = false
-            while(!isNewFileCreated) {
-                val file = File(fileName)
-                isNewFileCreated = file.createNewFile()
-                if (isNewFileCreated) {
-                    println("New file: $fileName")
-                } else {
-                    println("$fileName already exists")
-                    recording += 1
-                }
-            }*/
-
-            /*val directory: File = applicationContext.getDir("/data", MODE_PRIVATE)
-            val file = File(directory, fileName)*/
 
             var isNewFileCreated = false
             val directory: File = applicationContext.getDir("data", MODE_PRIVATE)
@@ -137,9 +124,40 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
             recordingState.value = true
             println("Button clicked true")
         } else {
+            onPause()
+
             recordingState.value = false
             println("Button clicked false")
         }
+    }
+
+    private fun onCleaningButtonClicked() {
+        var fileId = 0
+        var fileExists = true
+        val directory: File = applicationContext.getDir("data", MODE_PRIVATE)
+        while (fileExists) {
+            fileId += 1
+            val list = listOf("DATA", fileId.toString(), ".txt")
+            fileName = list.joinToString("")
+            var file = File(directory, fileName)
+            fileExists = file.exists()
+
+            if(fileExists){
+                print("$fileName exists.")
+            } else {
+                print("$fileName does not exist.")
+            }
+
+            if (file.delete()) {
+                println("File $fileName deleted successfully.")
+            } else {
+                println("Error in deleting file $fileName.")
+            }
+        }
+
+        recording = 0
+
+        println("All files deleted successfully.")
     }
 
     @Composable
@@ -157,7 +175,7 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
             ) {
                 ApplicationName()
 
-                Spacer(modifier = Modifier.height(16.dp))
+                //Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
                     onClick = { onButtonClicked() },
@@ -168,29 +186,6 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
                 ) {
                     Text(text = if (recordingState.value) stringResource(R.string.stop_recording_button) else stringResource(R.string.start_recording_button))
                 }
-
-                /*val interactionSource = remember { MutableInteractionSource() }
-                val isPressed by interactionSource.collectIsPressedAsState()
-
-                Button(
-                    onClick = { onButtonClicked() },
-                    interactionSource = interactionSource,
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = MaterialTheme.colors.spanColor,
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text(if (isPressed) stringResource(R.string.stop_recording_button) else stringResource(R.string.start_recording_button))
-                }*/
-
-                //SensorsDisplay()
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                /*sensorData = TextView(applicationContext)
-                sensorData.text = "Sensor Data"*/
-
-                Spacer(modifier = Modifier.height(16.dp))
 
                 Surface(
                     color = MaterialTheme.colors.spanColor, modifier = Modifier
@@ -204,6 +199,16 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
                         color = Color.White,
                         modifier = Modifier.padding(24.dp)
                     )
+                }
+
+                Button(
+                    onClick = { onCleaningButtonClicked() },
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colors.spanColor,
+                        contentColor = Color.White
+                    )
+                ) {
+                    Text(text = stringResource(R.string.cleaning_button))
                 }
 
                 ProjectLogo()
