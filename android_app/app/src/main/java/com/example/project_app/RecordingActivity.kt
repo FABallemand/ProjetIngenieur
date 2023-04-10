@@ -4,13 +4,13 @@ import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.os.Bundle
-import android.widget.TextView
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,7 +26,8 @@ import java.io.File
 
 class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
 
-    private var recordingState: Int = 0
+    //private var recordingState: Boolean = false
+    private var recordingState = mutableStateOf(false)
     private var recording: Int = 0
     private var fileName: String = ""
 
@@ -34,7 +35,6 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
     private var accelerometerEventListener: AccelerometerHandler? = null
 
     private lateinit var sensor: Sensor
-    private lateinit var sensorData: TextView
     private var sensorDataString = "Sensor Data"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +75,6 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
         val text = "x=${state.x.format(3).replaceFirst(",", ".")}\n" +
                 "y=${state.y.format(3).replaceFirst(",", ".")}\n" +
                 "z=${state.z.format(3).replaceFirst(",", ".")}"
-        sensorData.text = text
         sensorDataString = text
     }
 
@@ -100,11 +99,8 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
     }
 
     private fun onButtonClicked() {
-        if (recordingState == 0) {
+        if (!recordingState.value) {
             recording += 1
-
-            val list = listOf("DATA", recording.toString(), ".txt")
-            fileName = list.joinToString("")
 
             /*var isNewFileCreated = false
             while(!isNewFileCreated) {
@@ -124,6 +120,8 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
             var isNewFileCreated = false
             val directory: File = applicationContext.getDir("data", MODE_PRIVATE)
             while (!isNewFileCreated) {
+                val list = listOf("DATA", recording.toString(), ".txt")
+                fileName = list.joinToString("")
                 val file = File(directory, fileName)
                 isNewFileCreated = file.createNewFile()
                 if (isNewFileCreated) {
@@ -136,9 +134,11 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
 
             startListen()
 
-            recordingState = 1
+            recordingState.value = true
+            println("Button clicked true")
         } else {
-            recordingState = 0
+            recordingState.value = false
+            println("Button clicked false")
         }
     }
 
@@ -166,8 +166,22 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
                         contentColor = Color.White
                     )
                 ) {
-                    Text(stringResource(R.string.start_recording_button))
+                    Text(text = if (recordingState.value) stringResource(R.string.stop_recording_button) else stringResource(R.string.start_recording_button))
                 }
+
+                /*val interactionSource = remember { MutableInteractionSource() }
+                val isPressed by interactionSource.collectIsPressedAsState()
+
+                Button(
+                    onClick = { onButtonClicked() },
+                    interactionSource = interactionSource,
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colors.spanColor,
+                        contentColor = Color.White
+                    )
+                ) {
+                    Text(if (isPressed) stringResource(R.string.stop_recording_button) else stringResource(R.string.start_recording_button))
+                }*/
 
                 //SensorsDisplay()
 
@@ -186,7 +200,7 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
                         )
                 ) {
                     Text(
-                        text = "$sensorDataString",
+                        text = sensorDataString,
                         color = Color.White,
                         modifier = Modifier.padding(24.dp)
                     )
