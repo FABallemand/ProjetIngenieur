@@ -8,13 +8,12 @@ import android.widget.TextView
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -35,7 +34,8 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
     private var accelerometerEventListener: AccelerometerHandler? = null
 
     private lateinit var sensor: Sensor
-    private lateinit var outView: TextView
+    private lateinit var sensorData: TextView
+    private var sensorDataString = "Sensor Data"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +75,8 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
         val text = "x=${state.x.format(3).replaceFirst(",", ".")}\n" +
                 "y=${state.y.format(3).replaceFirst(",", ".")}\n" +
                 "z=${state.z.format(3).replaceFirst(",", ".")}"
-        outView.text = text
+        sensorData.text = text
+        sensorDataString = text
     }
 
     fun Double.format(digits: Int) = java.lang.String.format("%.${digits}f", this)
@@ -105,12 +106,32 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
             val list = listOf("DATA", recording.toString(), ".txt")
             fileName = list.joinToString("")
 
-            val file = File(fileName)
-            val isNewFileCreated: Boolean = file.createNewFile()
-            if (isNewFileCreated) {
-                println("New file: $fileName")
-            } else {
-                println("$fileName already exists")
+            /*var isNewFileCreated = false
+            while(!isNewFileCreated) {
+                val file = File(fileName)
+                isNewFileCreated = file.createNewFile()
+                if (isNewFileCreated) {
+                    println("New file: $fileName")
+                } else {
+                    println("$fileName already exists")
+                    recording += 1
+                }
+            }*/
+
+            /*val directory: File = applicationContext.getDir("/data", MODE_PRIVATE)
+            val file = File(directory, fileName)*/
+
+            var isNewFileCreated = false
+            val directory: File = applicationContext.getDir("data", MODE_PRIVATE)
+            while (!isNewFileCreated) {
+                val file = File(directory, fileName)
+                isNewFileCreated = file.createNewFile()
+                if (isNewFileCreated) {
+                    println("New file: $fileName")
+                } else {
+                    println("$fileName already exists")
+                    recording += 1
+                }
             }
 
             startListen()
@@ -136,9 +157,7 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
             ) {
                 ApplicationName()
 
-                // Spacer(modifier = Modifier.height(16.dp))
-
-                SensorsDisplay()
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
                     onClick = { onButtonClicked() },
@@ -150,8 +169,30 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
                     Text(stringResource(R.string.start_recording_button))
                 }
 
-                ProjectLogo()
+                //SensorsDisplay()
 
+                Spacer(modifier = Modifier.height(16.dp))
+
+                /*sensorData = TextView(applicationContext)
+                sensorData.text = "Sensor Data"*/
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Surface(
+                    color = MaterialTheme.colors.spanColor, modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(
+                            RoundedCornerShape(12.dp)
+                        )
+                ) {
+                    Text(
+                        text = "$sensorDataString",
+                        color = Color.White,
+                        modifier = Modifier.padding(24.dp)
+                    )
+                }
+
+                ProjectLogo()
             }
         }
     }
