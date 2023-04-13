@@ -1,10 +1,18 @@
 package com.example.project_app
 
-import android.content.Context
+import android.app.Activity
+import android.content.Intent
 import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.os.StrictMode
+import android.os.StrictMode.VmPolicy
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,22 +26,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.documentfile.provider.DocumentFile
 import com.example.project_app.ui.theme.TestTheme
 import com.example.project_app.ui.theme.spanColor
+import kotlinx.coroutines.flow.internal.NoOpContinuation.context
 import java.io.File
+import kotlin.coroutines.jvm.internal.CompletedContinuation.context
 
-class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
 
-    //private var recordingState: Boolean = false
+class RecordingActivity : AppCompatActivity(), SensorEventListener {
+
+    // Accelerometer
+    private lateinit var sensorManager: SensorManager
+
+    // Recording
     private var recordingState = mutableStateOf(false)
     private var recording: Int = 0
+
+    // private val directory: File = applicationContext.getDir("data", MODE_PRIVATE)
     private var fileName: String = ""
-
-    private lateinit var sensorManager: SensorManager
-    private var accelerometerEventListener: AccelerometerHandler? = null
-
-    private lateinit var sensor: Sensor
-    private var sensorDataString = "Sensor Data"
+    private lateinit var folderUri: Uri
+    private var sensorDataString: String = "Sensor Data"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,73 +56,69 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
             }
         }
 
-        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        requestStorageAccess()
+        setUpSensor()
+    }
 
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
-            sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+    private val requestStorageAccess = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+        uri?.let {
+            contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+
+            // Use the URI to access or write to the selected directory
         }
+        folderUri = uri as Uri
     }
 
-    private fun startListen() {
-
-        println("Start Collecting Data")
-        accelerometerEventListener = AccelerometerHandler(this)
-
-        if (accelerometerEventListener != null) {
-            sensorManager.unregisterListener(accelerometerEventListener)
-        } else {
-            println("ERROR: No accelerometer detected")
-        }
-        sensorManager.registerListener(
-            accelerometerEventListener,
-            sensor,
-            SensorManager.SENSOR_DELAY_NORMAL
-        )
+    private fun requestStorageAccess() {
+        requestStorageAccess.launch(null)
     }
 
-    override fun onPause() {
-        println("Stop Collecting Data")
-        super.onPause()
-        sensorManager.unregisterListener(accelerometerEventListener)
-    }
-
-    override fun onStateReceived(state: AccelerometerState) {
-        val text = "x=${state.x.format(3).replaceFirst(",", ".")}\n" +
-                "y=${state.y.format(3).replaceFirst(",", ".")}\n" +
-                "z=${state.z.format(3).replaceFirst(",", ".")}"
-        sensorDataString = text
-    }
-
-    fun Double.format(digits: Int) = java.lang.String.format("%.${digits}f", this)
-
-/*    @Composable
-    fun SensorsDisplay() {
-        val file = File(fileName)
-        val fileExists = file.exists()
-
-        if (fileExists) {
-            val sensorData = File(fileName).readText()
-            Text(
-                text = sensorData,
-                color = Color.Green,
-                fontSize = 30.sp,
-                textAlign = TextAlign.Left
+    private fun setUpSensor() {
+        // Accelerometer
+        sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+        sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also {
+            sensorManager.registerListener(
+                this,
+                it,
+                SensorManager.SENSOR_DELAY_FASTEST,
+                SensorManager.SENSOR_DELAY_FASTEST
             )
-        } else {
-            print("No such file: $fileName")
         }
-    }*/
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        if (event?.sensor?.type == Sensor.TYPE_ACCELEROMETER) {
+            val x = event.values[0]
+            val y = event.values[1]
+            val z = event.values[2]
+
+            sensorDataString = "${x.toFloat()};${y.toFloat()};${z.toFloat()}"
+
+            if (recordingState.value) {
+                File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                    fileName
+                ).appendText(sensorDataString + "\n")
+            }
+        }
+    }
+
+    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
+        return
+    }
 
     private fun onButtonClicked() {
         if (!recordingState.value) {
             recording += 1
 
             var isNewFileCreated = false
-            val directory: File = applicationContext.getDir("data", MODE_PRIVATE)
             while (!isNewFileCreated) {
                 val list = listOf("DATA", recording.toString(), ".txt")
                 fileName = list.joinToString("")
-                val file = File(directory, fileName)
+                val file = File(
+                    DocumentFile.fromTreeUri(this, folderUri),
+                    fileName
+                )
                 isNewFileCreated = file.createNewFile()
                 if (isNewFileCreated) {
                     println("New file: $fileName")
@@ -119,39 +128,46 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
                 }
             }
 
-            startListen()
-
             recordingState.value = true
-            println("Button clicked true")
+            println("Start collecting data")
         } else {
-            onPause()
-
             recordingState.value = false
-            println("Button clicked false")
+            println("Stop collecting data")
+
+            /*val emailIntent = Intent(
+                Intent.ACTION_SEND
+            ).apply {
+                type = "application/octet-stream"
+                putExtra(Intent.EXTRA_EMAIL, "fabien.allemand@etu.unistra.fr")
+                putExtra(Intent.EXTRA_SUBJECT, fileName)
+                putExtra(Intent.EXTRA_STREAM, Uri.fromFile(File(fileName)))
+            }
+            startActivity(Intent.createChooser(emailIntent, fileName))*/
         }
     }
 
     private fun onCleaningButtonClicked() {
         var fileId = 0
         var fileExists = true
-        val directory: File = applicationContext.getDir("data", MODE_PRIVATE)
         while (fileExists) {
             fileId += 1
             val list = listOf("DATA", fileId.toString(), ".txt")
             fileName = list.joinToString("")
-            var file = File(directory, fileName)
+            val file = File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                fileName
+            )
             fileExists = file.exists()
 
-            if(fileExists){
-                print("$fileName exists.")
+            if (fileExists) {
+                println("$fileName exists.")
+                if (file.delete()) {
+                    println("File $fileName deleted successfully.")
+                } else {
+                    println("Error in deleting file $fileName.")
+                }
             } else {
-                print("$fileName does not exist.")
-            }
-
-            if (file.delete()) {
-                println("File $fileName deleted successfully.")
-            } else {
-                println("Error in deleting file $fileName.")
+                println("$fileName does not exist.")
             }
         }
 
@@ -184,7 +200,11 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
                         contentColor = Color.White
                     )
                 ) {
-                    Text(text = if (recordingState.value) stringResource(R.string.stop_recording_button) else stringResource(R.string.start_recording_button))
+                    Text(
+                        text = if (recordingState.value) stringResource(R.string.stop_recording_button) else stringResource(
+                            R.string.start_recording_button
+                        )
+                    )
                 }
 
                 Surface(
@@ -224,5 +244,10 @@ class RecordingActivity : AppCompatActivity(), AccelerometerEventListener {
                 .fillMaxSize()
                 .wrapContentSize(Alignment.Center)
         )
+    }
+
+    override fun onDestroy() {
+        sensorManager.unregisterListener(this)
+        super.onDestroy()
     }
 }
