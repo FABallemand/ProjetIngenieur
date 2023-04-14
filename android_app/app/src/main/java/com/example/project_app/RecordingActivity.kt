@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import com.example.project_app.ui.theme.TestTheme
 import com.example.project_app.ui.theme.spanColor
 import java.io.File
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 class RecordingActivity : AppCompatActivity(), SensorEventListener {
@@ -33,10 +35,10 @@ class RecordingActivity : AppCompatActivity(), SensorEventListener {
     // Recording
     private var recordingState = mutableStateOf(false)
     private var recording: Int = 0
-
-    // private val directory: File = applicationContext.getDir("data", MODE_PRIVATE)
     private var fileName: String = ""
     private lateinit var folderUri: Uri
+    private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+    private lateinit var timeString: String
     private var sensorDataString: String = "Sensor Data"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,11 +74,13 @@ class RecordingActivity : AppCompatActivity(), SensorEventListener {
             sensorDataString = "${x.toFloat()};${y.toFloat()};${z.toFloat()}"
 
             if (recordingState.value) {
+                timeString = LocalDateTime.now().format(formatter)
+
                 val directory: File = applicationContext.getDir("data", MODE_PRIVATE)
                 File(
                     directory,
                     fileName
-                ).appendText(sensorDataString + "\n")
+                ).appendText("$timeString;$sensorDataString\n")
             }
         }
     }
