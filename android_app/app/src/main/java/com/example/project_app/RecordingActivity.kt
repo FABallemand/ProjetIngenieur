@@ -1,18 +1,12 @@
 package com.example.project_app
 
-import android.app.Activity
-import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.os.StrictMode
-import android.os.StrictMode.VmPolicy
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,12 +20,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.documentfile.provider.DocumentFile
 import com.example.project_app.ui.theme.TestTheme
 import com.example.project_app.ui.theme.spanColor
-import kotlinx.coroutines.flow.internal.NoOpContinuation.context
 import java.io.File
-import kotlin.coroutines.jvm.internal.CompletedContinuation.context
 
 
 class RecordingActivity : AppCompatActivity(), SensorEventListener {
@@ -56,21 +47,7 @@ class RecordingActivity : AppCompatActivity(), SensorEventListener {
             }
         }
 
-        requestStorageAccess()
         setUpSensor()
-    }
-
-    private val requestStorageAccess = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
-        uri?.let {
-            contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-
-            // Use the URI to access or write to the selected directory
-        }
-        folderUri = uri as Uri
-    }
-
-    private fun requestStorageAccess() {
-        requestStorageAccess.launch(null)
     }
 
     private fun setUpSensor() {
@@ -95,8 +72,9 @@ class RecordingActivity : AppCompatActivity(), SensorEventListener {
             sensorDataString = "${x.toFloat()};${y.toFloat()};${z.toFloat()}"
 
             if (recordingState.value) {
+                val directory: File = applicationContext.getDir("data", MODE_PRIVATE)
                 File(
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                    directory,
                     fileName
                 ).appendText(sensorDataString + "\n")
             }
@@ -113,10 +91,11 @@ class RecordingActivity : AppCompatActivity(), SensorEventListener {
 
             var isNewFileCreated = false
             while (!isNewFileCreated) {
+                val directory: File = applicationContext.getDir("data", MODE_PRIVATE)
                 val list = listOf("DATA", recording.toString(), ".txt")
                 fileName = list.joinToString("")
                 val file = File(
-                    DocumentFile.fromTreeUri(this, folderUri),
+                    directory,
                     fileName
                 )
                 isNewFileCreated = file.createNewFile()
@@ -151,10 +130,11 @@ class RecordingActivity : AppCompatActivity(), SensorEventListener {
         var fileExists = true
         while (fileExists) {
             fileId += 1
+            val directory: File = applicationContext.getDir("data", MODE_PRIVATE)
             val list = listOf("DATA", fileId.toString(), ".txt")
             fileName = list.joinToString("")
             val file = File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                directory,
                 fileName
             )
             fileExists = file.exists()
