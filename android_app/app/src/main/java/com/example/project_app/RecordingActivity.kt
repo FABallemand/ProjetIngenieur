@@ -4,8 +4,11 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.net.Uri
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
@@ -27,19 +30,24 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
-class RecordingActivity : AppCompatActivity(), SensorEventListener {
+class RecordingActivity : AppCompatActivity(), SensorEventListener, LocationListener {
+
+    // Time
+    private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+    private var timeString = ""
 
     // Accelerometer
-    private lateinit var sensorManager: SensorManager
+    private lateinit var accelerometerManager: SensorManager
+    private var accelerationString = ""
+
+    // GPS
+    private lateinit var locationManager: LocationManager
+    private var locationString = "location data"
 
     // Recording
     private var recordingState = mutableStateOf(false)
     private var recording: Int = 0
     private var fileName: String = ""
-    private lateinit var folderUri: Uri
-    private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
-    private lateinit var timeString: String
-    private var sensorDataString: String = "Sensor Data"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,14 +62,22 @@ class RecordingActivity : AppCompatActivity(), SensorEventListener {
 
     private fun setUpSensor() {
         // Accelerometer
-        sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
-        sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also {
-            sensorManager.registerListener(
+        accelerometerManager = getSystemService(SENSOR_SERVICE) as SensorManager
+        accelerometerManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also {
+            accelerometerManager.registerListener(
                 this,
                 it,
                 SensorManager.SENSOR_DELAY_FASTEST,
                 SensorManager.SENSOR_DELAY_FASTEST
             )
+        }
+
+        // GPS
+        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
+        try {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0f, this)
+        } catch (e: SecurityException) {
+            e.printStackTrace()
         }
     }
 
@@ -71,7 +87,7 @@ class RecordingActivity : AppCompatActivity(), SensorEventListener {
             val y = event.values[1]
             val z = event.values[2]
 
-            sensorDataString = "${x.toFloat()};${y.toFloat()};${z.toFloat()}"
+            accelerationString = "${x.toFloat()};${y.toFloat()};${z.toFloat()}"
 
             if (recordingState.value) {
                 timeString = LocalDateTime.now().format(formatter)
@@ -80,13 +96,21 @@ class RecordingActivity : AppCompatActivity(), SensorEventListener {
                 File(
                     directory,
                     fileName
-                ).appendText("$timeString;$sensorDataString\n")
+                ).appendText("$timeString;$accelerationString;$locationString\n")
             }
         }
     }
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
         return
+    }
+
+    override fun onLocationChanged(location: Location) {
+        val latitude = location.latitude
+        val longitude = location.longitude
+        val altitude = location.altitude
+
+        locationString = "${latitude.toFloat()};${longitude.toFloat()};${altitude.toFloat()}"
     }
 
     private fun onButtonClicked() {
@@ -199,7 +223,7 @@ class RecordingActivity : AppCompatActivity(), SensorEventListener {
                         )
                 ) {
                     Text(
-                        text = sensorDataString,
+                        text = accelerationString,
                         color = Color.White,
                         modifier = Modifier.padding(24.dp)
                     )
@@ -231,7 +255,8 @@ class RecordingActivity : AppCompatActivity(), SensorEventListener {
     }
 
     override fun onDestroy() {
-        sensorManager.unregisterListener(this)
+        accelerometerManager.unregisterListener(this)
+        locationManager.removeUpdates(this)
         super.onDestroy()
     }
 }
