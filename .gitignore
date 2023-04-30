@@ -1,17 +1,8 @@
-*.aux
-*.bbl
-*.blg
-*.fdb_latexmk
-*.fls
-*.lof
-*.log
-*.out
-*.toc
-
+# General
 *.mp4
-
 *.html
 
+# Data
 helbert/**/*.png
 helbert/**/*.html
 
@@ -21,3 +12,14 @@ arduino_device/data/**/*.html
 
 android_app/data/**/*.png
 android_app/data/**/*.html
+
+# Reviews
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.out
+*.toc
