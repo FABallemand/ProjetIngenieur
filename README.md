@@ -13,7 +13,7 @@ In order to work properly, the model must be able to detect various degradations
 ## 📎 Ressources
 - [Team's Google Drive](https://drive.google.com/drive/folders/1dDFLU-SnEQWEpOulhKNEzi3xeIAjL_nJ) (contains other documents related to this project)
 
-## 👥 Equipe
+## 👥 Team
 - ALLEMAND Fabien
 - BALAKRISHNAN Sylvain
 - BONNAIL Julie
