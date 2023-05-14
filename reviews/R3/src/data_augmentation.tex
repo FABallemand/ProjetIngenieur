@@ -1,1 +1,29 @@
 \section{Augmentation des Données}
+Le jeu de données obtenu suite à la séance d'enregistrement décrite dans la Section \ref{data_collection} est constitué de quatre-vingt-deux enregistrements résumés dans la Table \ref{data_collection_table}. Tel quel, ce jeu de données est insuffisant pour procéder directement à l'entraînement d'un modèle d'intelligence artificielle. En effet, pour entraîner les modèles les plus simples, il faut être en possession de suffisamment de données pour créer des jeux d'entraînement, de validation et de test. Les méthodes plus avancée relevant de l'apprentissage profond nécessitent encore plus de données d'entraînement pour être utilisées dans de bonnes conditions et offrir des résultats corrects.
+
+Plutôt que de continuer à collecter des données, une démarche longue et peu instructive, nous avons choisi de procéder à de l'augmentation de données.
+
+Les méthodes de \textit{data augmentation} consistent à créer de nouvelles données en altérant légèrement les données déjà présentes dans le \textit{dataset}. Lorsqu'on travaille sur des images, de nouvelles images peuvent être créer en effectuant des rotations, en rognant l'image ou en modifiant certaines propriétés (contraste, luminosité...).\\
+Dans le cadre de ce projet, les données sont sous la forme de séquences numériques selon trois axes. Nou savons choisi cinq méthodes pour augmenter la quantité de données:
+\begin{itemize}
+    \item Renverser la séquence dans le temps
+    \item Inverser l'axe correspondant à la rotation du robot
+    \item Ajout de bruit
+    \item Ajout d'un signal porteur
+    \item Découpage des séquences
+\end{itemize}
+
+\begin{table}[]
+    \begin{tabular}{|l|c|}
+    \hline
+    Dégradation  & \multicolumn{1}{l|}{Nombre d'enregistrements} \\ \hline
+    Ralentisseur & 20                                            \\ \hline
+    Racines      & 10                                            \\ \hline
+    Fissure      & 20                                            \\ \hline
+    Trou         & 12                                            \\ \hline
+    Dalles       & 4                                             \\ \hline
+    Parcours     & 16                                            \\ \hline
+    \end{tabular}
+    \caption{Table résumant la collecte de données}
+    \label{data_collection_table}
+\end{table}
