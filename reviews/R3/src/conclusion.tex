@@ -1,4 +1,9 @@
 \section{Conclusion}
 Le gain d'expérience suite à la première collecte de données et l'embrion de l'application Android nous ont permis de construire un jeu de données plus conséquent et de meilleure qualité. Ce \textit{dataset} contient plus de quatre-vingt enregistrements de durée variables correspondant au passage du robot Agile-X Scout 2.0 sur un ou plusieurs obstacles en faisant varier la vitesse.
 
-La taille de ce jeu de données restant insuffisante pour entraîner convenablement un modèle d'IA (jeu d'entraînement, de validation et de test), nous avons du augmenter artificiellement la taille de ce jeu de données en inversant la séquence dans le temps, inversant l'axe correspondant à la rotation du robot, en ajoutant du bruit et en combinant ces méthodes.
+La taille de ce jeu de données restant insuffisante pour entraîner convenablement un modèle d'IA (jeu d'entraînement, de validation et de test), nous avons du augmenter artificiellement le nombre d'enregistrements en inversant la séquence dans le temps, inversant l'axe correspondant à la rotation du robot, en ajoutant du bruit ou un signal porteur et en combinant ces méthodes.
+
+Une grande phase de pré-traitement a été réalisée avant de commencer à programmer une intelligence artificielle. La création du jeu de données contenant les séquences numériques a été automatisée et les données ont été labellisée manuellement selon les informations recueillies dans un tableur lors des enregistrements.
+Cependant, une nouvelle phase de pré-traitement est nécessaire pour uniformiser la longueur des séquences ce qui permettra de construire un premier classifieur.
+
+Plusieurs approches pour classifier les séquences seront testées par la suite: approches classiques (\textit{k-Nearest Neighbors}), approches par apprentissage profond (LSTM) et détection d'anomalies. Les différents modèles devront être évalués méthodiquement afin de sélectionner les modèle le plus adapté pour répondre à la problématique de ce projet. le modèle pourra alors être déployé et amélioré au cours du temps si nous parvenons à implémenter une méthode d'amélioration continue.

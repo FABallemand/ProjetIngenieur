@@ -1,7 +1,16 @@
 \section{Intelligence Artificielle}
 Ayant suffisemment de données pour entraîner un modèle d'intelligence artificelle, nous avons commencé à mettre les données en forme pour faciliter l'apprentissage.
 
+\subsection{Création du Jeu de Données}
 La première étape consiste à créer un véritable jeu de données labélisé en utilisant les enregistrements et les labels recuillis lors des collectes de données.
 Pour cela nous avons suivi dans le grandes lignes un tutoriel de pré-traitement des données séquentielles pour classification.\cite{tuto_1} Nous avons donc créé un grand \textit{dataset} contenant les \textit{inputs} regroupant tous les enregistrements que nous avons stocké sous la forme d'un fichier \textit{csv} et un fichier de lables avec l'extension \textit{.labels} qui regroupe les fichiers et leurs labels.
 
+\subsection{Premiers Modèle}
 La mise en place d'un premier modèle en suivant un autre tutoriel s'est avérée infructueuse. Adapter le programme présenté dans le tutoriel ne permettait pas d'utiliser le modèle car il nécessite des séquences de longueurs égales, ce qu in'est pas le cas dans nos données.\cite{tuto_2} Il faut donc ajouter une étape suplémentaires de pré-traitement pour obtenir des séquences de même longueur (par découpage ou ajout de \textit{padding}).
+
+\subsection{Méthodes Envisagées}
+Au cours des prochains sprints, nous envisageons de poursuivre le développement de l'intelligence artificielle.
+
+Nous commencerons par des modèles simples comme le modèle \textit{k-Nearest Neighbors} rencontré à plusieurs reprises lors de nos recherches. Nous pensons aussi essayer des méthodes plus avancées basées sur des approches d'apprentissage profond comme par exemple les \textit{Long-Short Term Memory} (LSTM) qui sont très utilisés pour la classification de séquences numériques. Finalement, nous essairons d'entraîner un modèle de détection d'anomalies. Bien qu'il n'effectue pas une classification des anomalies, ce modèle a l'avantage de détecter tout type d'anomalie et serait donc capable d'identifier n'importe quel type de dégradation de la chaussée.
+
+Suivant les ressources qui seront à notre disposition, nous devrons éventuellement effectuer l'entraînement des approches \textit{deep learning} par affinement d'un modèle déjà existant pour une tâche simialire (comme la détection de chute) voire plus générale et nous espérons pouvoir mettre en place un programme capable d'effectuer un apprentissage continu grâce à de nouvelles données enregistrées au fur et à mesure.
