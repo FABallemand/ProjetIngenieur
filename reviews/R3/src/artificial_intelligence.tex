@@ -1,1 +1,7 @@
 \section{Intelligence Artificielle}
+Ayant suffisemment de données pour entraîner un modèle d'intelligence artificelle, nous avons commencé à mettre les données en forme pour faciliter l'apprentissage.
+
+La première étape consiste à créer un véritable jeu de données labélisé en utilisant les enregistrements et les labels recuillis lors des collectes de données.
+Pour cela nous avons suivi dans le grandes lignes un tutoriel de pré-traitement des données séquentielles pour classification.\cite{tuto_1} Nous avons donc créé un grand \textit{dataset} contenant les \textit{inputs} regroupant tous les enregistrements que nous avons stocké sous la forme d'un fichier \textit{csv} et un fichier de lables avec l'extension \textit{.labels} qui regroupe les fichiers et leurs labels.
+
+La mise en place d'un premier modèle en suivant un autre tutoriel s'est avérée infructueuse. Adapter le programme présenté dans le tutoriel ne permettait pas d'utiliser le modèle car il nécessite des séquences de longueurs égales, ce qu in'est pas le cas dans nos données.\cite{tuto_2} Il faut donc ajouter une étape suplémentaires de pré-traitement pour obtenir des séquences de même longueur (par découpage ou ajout de \textit{padding}).
