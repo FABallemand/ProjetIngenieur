@@ -34,7 +34,7 @@ Etant donnée que le robot est très réactif (l'accélération et la décélér
 \begin{figure}
     \center
     \includegraphics[scale=0.5]{img/reversed_data.png}
-    \caption{Comparaison de enregistrement et de sa version modifiée (renversement du temps)}
+    \caption{Comparaison d'un enregistrement et de sa version modifiée (renversement du temps)}
     \label{data_augmentation_1}
 \end{figure}
 
@@ -44,7 +44,7 @@ De la même façon, inverser la rotation du robot ne modifie pas l'enregistremen
 \begin{figure}
     \center
     \includegraphics[scale=0.5]{img/inverted_data.png}
-    \caption{Comparaison de enregistrement et de sa version modifiée (renversement d'un axe horizontal)}
+    \caption{Comparaison d'un enregistrement et de sa version modifiée (renversement d'un axe horizontal)}
     \label{data_augmentation_2}
 \end{figure}
 
@@ -54,14 +54,14 @@ Une méthode classique pour augmenter la quantité de données consiste à ajout
 \begin{figure}
     \center
     \includegraphics[scale=0.5]{img/noisy_data.png}
-    \caption{Comparaison de enregistrement et de sa version modifiée (ajout de bruit)}
+    \caption{Comparaison d'un enregistrement et de sa version modifiée (ajout de bruit)}
     \label{data_augmentation_3}
 \end{figure}
 
 \subsection{Ajout d'un Signal Porteur}
-Des recherches sur internet \cite{TerryUm_ICMI2017} nous ont montré qu'il est aussi possible d'ajouter un signal porteur pour simuler un dénivelé supplémentaire. Un enregistrement de passage dans trou sur un sol horizontal peut devenir un enregistrement de passage dans un trou au cours d'une montée.
+Des recherches sur internet \cite{TerryUm_ICMI2017} nous ont montré qu'il est aussi possible d'ajouter un signal porteur pour simuler un dénivelé supplémentaire. Un enregistrement de passage dans un trou sur un sol horizontal peut devenir un enregistrement de passage dans un trou au cours d'une montée.
 
 \subsection{Découpage des Séquences}
-Une dernière méthode simple de \textit{data augmentation} consiste à découper les séquences dans le temps pour isoler les dégradations lors de parcours ou tout simplement pour obtenir des séquences de longueur différentes avec le passage sur la dégradation à différents moments de l'enregistrement (pas nécessaireemnt au milieu) ce qui pourrait induire un biais d'apprentissage.
+Une dernière méthode simple de \textit{data augmentation} consiste à découper les séquences dans le temps pour isoler les dégradations lors de parcours ou tout simplement pour obtenir des séquences de longueur différentes avec le passage sur la dégradation à différents moments de l'enregistrement (pas nécessairement au milieu) ce qui pourrait induire un biais d'apprentissage.\\
 
 Finalement, les méthodes précédentes peuvent être combinées afin de générer de nouvelles séquences artificielles.
