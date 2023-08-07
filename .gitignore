@@ -3,6 +3,8 @@
 *.html
 
 # Data
+DATA*_*.txt
+
 helbert/**/*.png
 helbert/**/*.html
 
@@ -12,6 +14,9 @@ arduino_device/data/**/*.html
 
 android_app/data/**/*.png
 android_app/data/**/*.html
+
+# AI
+*.h5
 
 # Reviews
 *.aux
