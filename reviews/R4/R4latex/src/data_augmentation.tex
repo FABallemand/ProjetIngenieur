@@ -1,0 +1,8 @@
+\newpage
+\section{Augmentation des Données}
+
+ Conformément à ce qui avait été discuté lors de la troisième revue de notre projet, nous avons entamé le processus d'augmentation de données. Plus spécifiquement, nous avons identifié cinq types d'augmentation de données qui préservent les informations pertinentes pour nos futurs modèles, à savoir : le renversement de la séquence dans le temps, l'inversion de l'axe correspondant à la rotation du robot, l'ajout de bruit, l'ajout d'un signal porteur, et le découpage des séquences.
+
+À ce stade, nous avons combiné les opérations de renversement dans le temps (R), d'inversion de l'axe de rotation du robot (I), d'ajout de bruit (N) et d'ajout d'un signal porteur (M) pour générer un ensemble de seize signaux distincts, tous dérivés d'un signal initial. Grâce à cette combinaison d'opérations, nous avons considérablement enrichi notre jeu de données accélèrométriques.
+
+Il convient de noter que l'ordre dans lequel ces modifications ont été appliquées n'a pas d'incidence sur le résultat final, ce qui nous a permis de créer un total de 1312 données accélèrométriques uniques à partir des 82 enregistrements initiaux collectés par l'application Android. Ces données augmentées seront utilisées pour l'entraînement de notre modèle, renforçant ainsi sa robustesse et sa capacité à généraliser à partir d'un ensemble de données plus diversifié.
