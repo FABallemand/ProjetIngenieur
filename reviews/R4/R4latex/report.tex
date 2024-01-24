@@ -1,0 +1,157 @@
+\documentclass{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{tcolorbox,listings}
+\usepackage{color}
+\usepackage{hyperref}
+\renewcommand\headrulewidth{1pt}
+\usepackage{marvosym}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{babel}
+\usepackage[french]{babel}
+\usepackage[babel=true,kerning=true]{microtype}
+\usepackage{afterpage}
+\usepackage{wrapfig}
+% \usepackage[colorlinks=true,urlcolor=blue]{hyperref}
+
+\newcommand\myemptypage{
+    \null
+    \thispagestyle{empty}
+    \addtocounter{page}{-1}
+    \newpage
+}
+
+\usetikzlibrary{
+    arrows,
+    calc,
+    shapes.geometric,
+    shapes.misc,
+    shapes.symbols,
+    shapes.arrows,
+    automata,
+    through,
+    positioning,
+    scopes,
+    decorations.shapes,
+    decorations.text,
+    decorations.pathmorphing,
+    shadows}
+
+\definecolor{darkWhite}{rgb}{0.94,0.94,0.94}
+
+\lstset{
+    backgroundcolor=\color{darkWhite},
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    commentstyle=\color{green},
+    deletekeywords={...},
+    escapeinside={\%*}{*)},
+    extendedchars=true,
+    keepspaces=true,
+    keywordstyle=\color{blue},
+    %language=Python,
+    morekeywords={*,...},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    stepnumber=1,
+    stringstyle=\color{gray},
+    tabsize=4,
+}
+
+\lstdefinestyle{frameStyle}{
+    basicstyle=\sffamily,
+    numbers=left,
+    numbersep=20pt,
+    numberstyle=\tiny\color{black}
+}
+
+\tcbuselibrary{listings,skins,breakable}
+
+\newtcblisting{customFrame}{
+    arc=0mm,
+    top=0mm,
+    bottom=0mm,
+    left=3mm,
+    right=0mm,
+    width=\textwidth,
+    listing only,
+    listing options={style=frameStyle},
+    breakable
+}
+
+\fancyhead[L]{BALAKRISHNAN Sylvain\\BONNAIL Julie}
+\fancyhead[C]{Mesurer les Infrastructures Routières}
+\fancyhead[R]{\includegraphics[scale=0.4]{img/logo_TPS_1.png}}
+\fancyfoot[L]{Projet Ingénieur}
+\fancyfoot[R]{\today}
+
+\begin{document}
+
+\thispagestyle{empty}
+\addtocounter{page}{-1}
+\begin{center}
+    \baselineskip=50pt
+    \vspace*{1cm}
+    \textbf{{\Huge Projet Ingénieur}}\\
+    \vspace*{0.25cm}
+    \textbf{{\Huge Mesurer les Infrastructures Routières}}\\
+    \vspace*{0.25cm}
+    \begin{minipage}[c]{.46\linewidth}
+        \centering
+        \textbf{Equipe:}\\
+        BALAKRISHNAN Sylvain\\BONNAIL Julie
+    \end{minipage}
+\end{center}
+\vspace*{0.1cm}
+
+\begin{figure}[H]
+    \centering
+    \centerline{\includegraphics[scale=.66]{img/logo_Alcatel_1.png}}
+    \vspace*{0.1cm}
+    \centerline{\includegraphics[scale=1.25]{img/logo_TPS_2.png}}
+\end{figure}
+
+\newpage
+\renewcommand{\contentsname}{Table des matières}
+\tableofcontents
+
+\newpage
+\addcontentsline{toc}{section}{Liste des figures}
+\renewcommand{\listfigurename}{Liste des figures}
+\listoffigures
+
+\newpage
+\vspace*{0.01cm}
+
+\input{src/intro.tex}
+
+\input{src/r3.tex}
+
+\input{src/reorganisation.tex}
+
+\input{src/data_analysis}
+
+\input{src/data_augmentation.tex}
+
+\input{src/dataset}
+
+\input{src/artificial_intelligence}
+
+\input{src/conclusion.tex}
+
+\newpage
+\vspace*{0.01cm}
+\addcontentsline{toc}{section}{Bibliographie}
+\renewcommand{\refname}{Bibliographie}
+\bibliographystyle{plain}
+\bibliography{bibliography.bib}
+
+\end{document}
